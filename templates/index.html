@@ -10,11 +10,25 @@ scale=1.0">
         {% if lista %}
         <ul>
             {% for elemento in lista %}
-                <li>{{ elemento }}</li>
+            <li>
+                {{ elemento }}
+                <form action="/rimuovi/{{ loop.index0 }}" method="post"style="display:inline;">
+                <button type="submit">Rimuovi</button>
+                </form>
+            </li>
             {% endfor %}
         </ul>
         {% else %}
             <p>La lista è vuota.</p>
         {% endif %}
-    </body>
+            <form action="/aggiungi" method="post">
+                 <input type="text" name="elemento" placeholder="Aggiungi un elemento"required>
+                <button type="submit">Aggiungi</button>
+            </form>
+        </body>
+    <form action="/aggiungi" method="post">
+        <input type="text" name="elemento" placeholder="Aggiungi un elemento" required>
+
+        <button type="submit">Aggiungi</button>
+    </form>
 </html>
