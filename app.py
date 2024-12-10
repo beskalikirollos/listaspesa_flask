@@ -6,7 +6,8 @@ app = Flask(__name__)
 #rotta principale
 @app.route('/')
 def home():
-    return render_template('index.html')
+    lista_spesa = ListaSpesa.query.all() #recupera tutti i dati dalle query 
+return render_template('home.html', lista=lista_spesa) #li passa all'html per visualizzarli 
 
 #avvio dell'app Flask
 if __name__ == '__main__':
@@ -25,15 +26,19 @@ global lista_spesa
 def aggiungi():
     elemento = request.form['elemento']
     if elemento:
-        lista_spesa.append(elemento)
+        nuovo_elemento = ListaSpesa(elemento=elemento) #crea un nuovo elemento a lista spesa 
+        db.session.add(nuovo_elemento) #lo aggiunge al server sqlalchemy
+        db.session.commit() #salva
     return redirect(url_for('home'))
 
 
 @app.route('/rimuovi/<int:indice>', methods=['POST'])
+@app.route('/rimuovi/<int:indice>', methods=['POST'])
 def rimuovi(indice):
-    if 0 <= indice < len(lista_spesa):
-        lista_spesa.pop(indice)
-    return redirect(url_for('home'))    
+    elemento = ListaSpesa.query.get_or_404(indice) #prende un elemento dalla lista spesa 
+    db.session.delete(elemento) #cancella l'elemento dal server sqlalchemy
+    db.session.commit() #salva
+return redirect(url_for('home'))    
 
 @app.route('/svuota_lista', methods=['POST'])
 def svuota_lista():
